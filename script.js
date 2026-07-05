@@ -1,40 +1,38 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const loginForm = document.getElementById('loginForm');
-    const passwordInput = document.getElementById('password');
-    const togglePasswordIcon = document.getElementById('togglePassword');
+    const signupForm = document.getElementById('signupForm');
+    const togglePasswordIcons = document.querySelectorAll('.toggle-password');
 
-    // 1. Toggle Password Visibility (Eye Icon Click)
-    togglePasswordIcon.addEventListener('click', () => {
-        // Check current state and switch type
-        const isPassword = passwordInput.getAttribute('type') === 'password';
-        passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
-        
-        // Dynamically shift icons between eye and slashed-eye
-        if (isPassword) {
-            togglePasswordIcon.classList.remove('fa-eye');
-            togglePasswordIcon.classList.add('fa-eye-slash');
-        } else {
-            togglePasswordIcon.classList.remove('fa-eye-slash');
-            togglePasswordIcon.classList.add('fa-eye');
-        }
+    // Dynamic Multi-field Password dots visibility logic toggle configuration
+    togglePasswordIcons.forEach(icon => {
+        icon.addEventListener('click', () => {
+            const targetId = icon.getAttribute('data-target');
+            const passwordField = document.getElementById(targetId);
+            
+            const isHidden = passwordField.getAttribute('type') === 'password';
+            passwordField.setAttribute('type', isHidden ? 'text' : 'password');
+            
+            if (isHidden) {
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        });
     });
 
-    // 2. Handle Form Submission
-    loginForm.addEventListener('submit', (event) => {
-        // Prevents page refresh on button press
-        event.preventDefault(); 
-        
-        const email = document.getElementById('email').value;
-        const password = passwordInput.value;
-        const rememberMe = document.getElementById('rememberMe').checked;
+    // Handle verification checks on registration submit execution
+    signupForm.addEventListener('submit', (event) => {
+        event.preventDefault();
 
-        // Capture user credentials safely for database/API calls
-        console.log('Form Submitted Successfully:', {
-            email: email,
-            password: password,
-            remember: rememberMe
-        });
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
 
-        // Optional: Add custom front-end validation or loading spinner logic below
+        if (password !== confirmPassword) {
+            alert("Verification mismatch error: Passwords do not match.");
+            return;
+        }
+
+        console.log('Account Registration Payload submitted successfully.');
     });
 });
